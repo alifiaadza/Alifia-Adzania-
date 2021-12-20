@@ -1,262 +1,304 @@
-<?php
+<div class="right_col" role="main">
+    <div class="page-title">
+        <div class="title_left">
+            <h3>Data Petugas</h3>
+        </div>
+    </div>
+    <div class="flash-datae" data-flashdata="<?php echo $this->session->flashdata('msg'); ?>"></div>
+    <?php if ($this->session->flashdata('msg')) : ?>
 
-	define('ENVIRONMENT', isset($_SERVER['CI_ENV']) ? $_SERVER['CI_ENV'] : 'development');
+    <?php endif; ?>
+    <div class="clearfix"></div>
+    <div class="row">
+        <div class="col-md-12 col-sm-12 ">
+            <div class="x_panel">
+                <div class="x_title">
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addDataPetugasModal">Tambah Data Petugas</button>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="card-box table-responsive">
+                                <table id="datatable" class="table table-striped table-bordered" style="width:100%">
+                                    <thead>
+                                        <tr>
+                                            <th>No</th>
+                                            <th>Nama lengkap</th>
+                                            <th>Tempat/Tanggal Lahir</th>
+                                            <th>Jabatan</th>
+                                            <th>Lama Kerja</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
 
-/*
- *---------------------------------------------------------------
- * ERROR REPORTING
- *---------------------------------------------------------------
- *
- * Different environments will require different levels of error reporting.
- * By default development will show errors but testing and live will hide them.
- */
-switch (ENVIRONMENT)
-{
-	case 'development':
-		error_reporting(-1);
-		ini_set('display_errors', 1);
-	break;
+                                    <tbody>
+                                        <?php $i = 1; ?>
+                                        <?php foreach ($petugas as $e) : ?>
+                                            <tr>
+                                                <th scope="row">
+                                                    <center><?= $i; ?></center>
+                                                </th>
+                                                <td><?= $e['nama_petugas']; ?></td>
+                                                <td><?= $e['tempat_lahir'] . ', ' . $e['tgl_lahir']; ?></td>
+                                                <td><?= $e['jabatan']; ?></td>
+                                                <td><?= $e['lama_kerja'] . ' Tahun'; ?></td>
+                                                <td>
+                                                    <!-- <a data-toggle="modal" data-target="#viewDataPetugasModal<?= $e['id_petugas']; ?>" href="<?= base_url(); ?>petugas/viewDataPetugas/<?= $e['id_petugas']; ?>" class="btn btn-info btn-circle btn-sm">
+                                                        <i class="fa fa-sticky-note"></i>
+                                                    </a> -->
+                                                    <a data-toggle="modal" data-target="#editDataPetugasModal<?= $e['id_petugas']; ?>" href="<?= base_url(); ?>petugas/updateDataPetugas/<?= $e['id_petugas']; ?>" class="btn btn-warning btn-circle btn-sm">
+                                                        <i class="fa fa-edit"></i>
+                                                    </a>
+                                                    <a data-toggle="tooltip" href="<?= base_url(''); ?>petugas/deleteDataPetugas/<?= $e['id_petugas']; ?>" class="btn btn-danger btn-circle btn-sm tbl-hapus" title="Delete">
+                                                        <i class="fa fa-trash"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                            <?php $i++; ?>
+                                        <?php endforeach; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-	case 'testing':
-	case 'production':
-		ini_set('display_errors', 0);
-		if (version_compare(PHP_VERSION, '5.3', '>='))
-		{
-			error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT & ~E_USER_NOTICE & ~E_USER_DEPRECATED);
-		}
-		else
-		{
-			error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_USER_NOTICE);
-		}
-	break;
+    <!-- modals -->
+    <!-- Large modal -->
+    <div class="modal fade bs-example-modal-lg" id="addDataPetugasModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
 
-	default:
-		header('HTTP/1.1 503 Service Unavailable.', TRUE, 503);
-		echo 'The application environment is not set correctly.';
-		exit(1); // EXIT_ERROR
-}
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">Form Data Petugas</h4>
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <form id="demo-form2" action="<?php echo base_url('petugas/createDataPetugas') ?>" class="form-horizontal form-label-left" method="POST" enctype="multipart/form-data">
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12 form-group">
+                                <div class="item form-group">
+                                    <label class="col-form-label col-md-3 col-sm-3 label-align" for="nama-petugas">Nama Petugas</label>
+                                    <div class="col-md-9">
+                                        <input type="text" id="nama-petugas" name="nama-petugas" required="required" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="item form-group">
+                                    <label class="col-form-label col-md-3 col-sm-3 label-align" for="tmt-lahir">Tempat Lahir</label>
+                                    <div class="col-md-9">
+                                        <input type="text" id="tmt-lahir" name="tmt-lahir" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="item form-group">
+                                    <label class="col-form-label col-md-3 col-sm-3 label-align">Tgl Lahir
+                                    </label>
+                                    <div class="col-md-9">
+                                        <input id="tgl-lahir" name="tgl-lahir" class="date-picker form-control" placeholder="dd-mm-yyyy" type="text" type="text" onfocus="this.type='date'" onmouseover="this.type='date'" onclick="this.type='date'" onblur="this.type='text'" onmouseout="timeFunctionLong(this)">
+                                        <script>
+                                            function timeFunctionLong(input) {
+                                                setTimeout(function() {
+                                                    input.type = 'text';
+                                                }, 60000);
+                                            }
+                                        </script>
+                                    </div>
+                                </div>
+                                <div class="item form-group">
+                                    <label class="col-form-label col-md-3 col-sm-3 label-align" for="no-hp">No HP</label>
+                                    <div class="col-md-9">
+                                        <input type="text" id="no-hp" name="no-hp" class="form-control" data-inputmask="'mask' : '9999-9999-9999'">
+                                    </div>
+                                </div>
+                                <div class="item form-group">
+                                    <label class="col-form-label col-md-3 col-sm-3 label-align" for="jabatan">Jabatan</label>
+                                    <div class="col-md-9">
+                                        <select name="jabatan" id="jabatan" class="form-control" required>
+                                            <option value="">-- Pilih Jabatan --</option>
+                                            <option value="Ketua">Ketua</option>
+                                            <option value="Bendahara">Bendahara</option>
+                                            <option value="Sekretaris">Sekretaris</option>
+                                            <option value="Anggota">Anggota</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="item form-group">
+                                    <label class="col-form-label col-md-3 col-sm-3 label-align" for="pendidikan-terakhir">Pendidikan Terakhir</label>
+                                    <div class="col-md-9">
+                                        <input type="text" id="pendidikan-terakhir" name="pendidikan-terakhir" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="item form-group">
+                                    <label class="col-form-label col-md-3 col-sm-3 label-align" for="lama-kerja">Lama Kerja</label>
+                                    <div class="col-md-8">
+                                        <input type="number" id="lama-kerja" name="lama-kerja" class="form-control">
+                                    </div>
+                                    <label class="col-form-label label-align" for="tahun">Tahun
+                                </div>
+                                <div class="item form-group">
+                                    <label class="col-form-label col-md-3 col-sm-3 label-align" for="tugas-pokok">data bidan</label>
+                                    <div class="col-md-9">
+                                        <input type="text" id="tugas-pokok" name="tugas-pokok" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="item form-group">
+                                    <label class="col-form-label col-md-3 col-sm-3 label-align" for="user_id">Username</label>
+                                    <div class="col-md-9">
+                                        <select name="user_id" id="user_id" class="form-control" required>
+                                            <option value="">-- Pilih Username --</option>
+                                            <?php foreach ($users as $m) : ?>
+                                                <option value="<?= $m['id_users']; ?>"><?= $m['username']; ?></option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="reset" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
-/*
- *---------------------------------------------------------------
- * SYSTEM DIRECTORY NAME
- *---------------------------------------------------------------
- *
- * This variable must contain the name of your "system" directory.
- * Set the path if it is not in the same directory as this file.
- */
-	$system_path = 'system';
+    <!-- modals -->
+    <!-- Large modal -->
+    <?php
+    $q = $this->db->get('user');
+    $dist =  array();
+    if ($q->num_rows() > 0) {
+        foreach ($q->result() as $row) {
+            $dist[] = $row;
+        }
+    }
 
-/*
- *---------------------------------------------------------------
- * APPLICATION DIRECTORY NAME
- *---------------------------------------------------------------
- *
- * If you want this front controller to use a different "application"
- * directory than the default one you can set its name here. The directory
- * can also be renamed or relocated anywhere on your server. If you do,
- * use an absolute (full) server path.
- * For more info please see the user guide:
- *
- * https://codeigniter.com/user_guide/general/managing_apps.html
- *
- * NO TRAILING SLASH!
- */
-	$application_folder = 'application';
+    $a = 0;
+    foreach ($petugas as $row) {
+        $a++;
+    ?>
+        <div class="modal fade bs-example-modal-lg" id="editDataPetugasModal<?= $row['id_petugas']; ?>"" tabindex=" -1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
 
-/*
- *---------------------------------------------------------------
- * VIEW DIRECTORY NAME
- *---------------------------------------------------------------
- *
- * If you want to move the view directory out of the application
- * directory, set the path to it here. The directory can be renamed
- * and relocated anywhere on your server. If blank, it will default
- * to the standard location inside your application directory.
- * If you do move this, use an absolute (full) server path.
- *
- * NO TRAILING SLASH!
- */
-	$view_folder = '';
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="myModalLabel">Edit Form Data Petugas</h4>
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <form id="demo-form2" action="<?php echo base_url('petugas/updateDataPetugas/') . $row['id_petugas']; ?>" class="form-horizontal form-label-left" method="POST" enctype="multipart/form-data">
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-md-12 col-sm-12 form-group">
+                                    <div class="item form-group">
+                                        <label class="col-form-label col-md-3 col-sm-3 label-align" for="nama-petugas">Nama Petugas</label>
+                                        <div class="col-md-9">
+                                            <input type="text" id="nama-petugas" name="nama-petugas" required="required" class="form-control" value="<?= $row['nama_petugas'] ?>">
+                                        </div>
+                                    </div>
+                                    <div class="item form-group">
+                                        <label class="col-form-label col-md-3 col-sm-3 label-align" for="tmt-lahir">tempat Lahir</label>
+                                        <div class="col-md-9">
+                                            <input type="text" id="tmt-lahir" name="tmt-lahir" class="form-control" value="<?= $row['tempat_lahir'] ?>">
+                                        </div>
+                                    </div>
+                                    <div class="item form-group">
+                                        <label class="col-form-label col-md-3 col-sm-3 label-align">Tgl Lahir
+                                        </label>
+                                        <div class="col-md-9">
+                                            <input id="tgl-lahir" name="tgl-lahir" class="date-picker form-control" placeholder="dd-mm-yyyy" type="text" required="required" type="text" onfocus="this.type='date'" onmouseover="this.type='date'" onclick="this.type='date'" onblur="this.type='text'" onmouseout="timeFunctionLong(this)" value="<?= $row['tgl_lahir'] ?>">
+                                            <script>
+                                                function timeFunctionLong(input) {
+                                                    setTimeout(function() {
+                                                        input.type = 'text';
+                                                    }, 60000);
+                                                }
+                                            </script>
+                                        </div>
+                                    </div>
+                                    <div class="item form-group">
+                                        <label class="col-form-label col-md-3 col-sm-3 label-align" for="no-hp">No HP</label>
+                                        <div class="col-md-9">
+                                            <input type="text" id="no-hp" name="no-hp" class="form-control" data-inputmask="'mask' : '9999-9999-9999'" value="<?= $row['no_hp'] ?>">
+                                        </div>
+                                    </div>
+                                    <div class="item form-group">
+                                        <label class="col-form-label col-md-3 col-sm-3 label-align" for="jabatan">Jabatan</label>
+                                        <div class="col-md-9">
+                                            <select name="jabatan" id="jabatan" class="form-control" required>
+                                                <option value="">-- Pilih Jabatan --</option>
+                                                <option value="Ketua" <?php if ($row['jabatan'] == "Ketua") {
+                                                                            echo "selected";
+                                                                        } ?>>Ketua</option>
+                                                <option value="Bendahara" <?php if ($row['jabatan'] == "Bendahara") {
+                                                                                echo "selected";
+                                                                            } ?>>Bendahara</option>
+                                                <option value="Sekretaris" <?php if ($row['jabatan'] == "Sekretaris") {
+                                                                                echo "selected";
+                                                                            } ?>>Sekretaris</option>
+                                                <option value="Anggota" <?php if ($row['jabatan'] == "Anggota") {
+                                                                            echo "selected";
+                                                                        } ?>>Anggota</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="item form-group">
+                                        <label class="col-form-label col-md-3 col-sm-3 label-align" for="pendidikan-terakhir">Pendidikan Terakhir</label>
+                                        <div class="col-md-9">
+                                            <input type="text" id="pendidikan-terakhir" name="pendidikan-terakhir" class="form-control" value="<?= $row['pendidikan_terakhir'] ?>">
+                                        </div>
+                                    </div>
+                                    <div class="item form-group">
+                                        <label class="col-form-label col-md-3 col-sm-3 label-align" for="lama-kerja">Lama Kerja</label>
+                                        <div class="col-md-8">
+                                            <input type="number" id="lama-kerja" name="lama-kerja" class="form-control" value="<?= $row['lama_kerja'] ?>">
+                                        </div>
+                                        <label class="col-form-label label-align" for="tahun">Tahun
+                                    </div>
+                                    <div class="item form-group">
+                                        <label class="col-form-label col-md-3 col-sm-3 label-align" for="tugas-pokok">data bidan</label>
+                                        <div class="col-md-9">
+                                            <input type="text" id="tugas-pokok" name="tugas-pokok" class="form-control" value="<?= $row['tugas_pokok'] ?>">
+                                        </div>
+                                    </div>
+                                    <div class="item form-group">
+                                        <label class="col-form-label col-md-3 col-sm-3 label-align" for="user_id">Username</label>
+                                        <div class="col-md-9">
+                                            <select name="user_id" id="user_id" class="form-control" required>
+                                                <option value="">-- Pilih Username --</option>
+                                                <?php
+                                                // var_dump($row['user_id'])  ;
+                                                // die;
+                                                if (count($dist)) {
+                                                    foreach ($dist as $item) {
+                                                ?>
+                                                        <option value="<?php echo $item->id_users; ?>" <?php if ($item->id_users == $row['user_id']) echo 'selected'; ?>> <?php echo $item->username; ?></option>
+                                                <?php
+                                                    }
+                                                }
+                                                ?>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="reset" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Update</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    <?php
+    }
+    ?>
 
-
-/*
- * --------------------------------------------------------------------
- * DEFAULT CONTROLLER
- * --------------------------------------------------------------------
- *
- * Normally you will set your default controller in the routes.php file.
- * You can, however, force a custom routing by hard-coding a
- * specific controller class/function here. For most applications, you
- * WILL NOT set your routing here, but it's an option for those
- * special instances where you might want to override the standard
- * routing in a specific front controller that shares a common CI installation.
- *
- * IMPORTANT: If you set the routing here, NO OTHER controller will be
- * callable. In essence, this preference limits your application to ONE
- * specific controller. Leave the function name blank if you need
- * to call functions dynamically via the URI.
- *
- * Un-comment the $routing array below to use this feature
- */
-	// The directory name, relative to the "controllers" directory.  Leave blank
-	// if your controller is not in a sub-directory within the "controllers" one
-	// $routing['directory'] = '';
-
-	// The controller class file name.  Example:  mycontroller
-	// $routing['controller'] = '';
-
-	// The controller function you wish to be called.
-	// $routing['function']	= '';
-
-
-/*
- * -------------------------------------------------------------------
- *  CUSTOM CONFIG VALUES
- * -------------------------------------------------------------------
- *
- * The $assign_to_config array below will be passed dynamically to the
- * config class when initialized. This allows you to set custom config
- * items or override any default config values found in the config.php file.
- * This can be handy as it permits you to share one application between
- * multiple front controller files, with each file containing different
- * config values.
- *
- * Un-comment the $assign_to_config array below to use this feature
- */
-	// $assign_to_config['name_of_config_item'] = 'value of config item';
-
-
-
-// --------------------------------------------------------------------
-// END OF USER CONFIGURABLE SETTINGS.  DO NOT EDIT BELOW THIS LINE
-// --------------------------------------------------------------------
-
-/*
- * ---------------------------------------------------------------
- *  Resolve the system path for increased reliability
- * ---------------------------------------------------------------
- */
-
-	// Set the current directory correctly for CLI requests
-	if (defined('STDIN'))
-	{
-		chdir(dirname(__FILE__));
-	}
-
-	if (($_temp = realpath($system_path)) !== FALSE)
-	{
-		$system_path = $_temp.DIRECTORY_SEPARATOR;
-	}
-	else
-	{
-		// Ensure there's a trailing slash
-		$system_path = strtr(
-			rtrim($system_path, '/\\'),
-			'/\\',
-			DIRECTORY_SEPARATOR.DIRECTORY_SEPARATOR
-		).DIRECTORY_SEPARATOR;
-	}
-
-	// Is the system path correct?
-	if ( ! is_dir($system_path))
-	{
-		header('HTTP/1.1 503 Service Unavailable.', TRUE, 503);
-		echo 'Your system folder path does not appear to be set correctly. Please open the following file and correct this: '.pathinfo(__FILE__, PATHINFO_BASENAME);
-		exit(3); // EXIT_CONFIG
-	}
-
-/*
- * -------------------------------------------------------------------
- *  Now that we know the path, set the main path constants
- * -------------------------------------------------------------------
- */
-	// The name of THIS file
-	define('SELF', pathinfo(__FILE__, PATHINFO_BASENAME));
-
-	// Path to the system directory
-	define('BASEPATH', $system_path);
-
-	// Path to the front controller (this file) directory
-	define('FCPATH', dirname(__FILE__).DIRECTORY_SEPARATOR);
-
-	// Name of the "system" directory
-	define('SYSDIR', basename(BASEPATH));
-
-	// The path to the "application" directory
-	if (is_dir($application_folder))
-	{
-		if (($_temp = realpath($application_folder)) !== FALSE)
-		{
-			$application_folder = $_temp;
-		}
-		else
-		{
-			$application_folder = strtr(
-				rtrim($application_folder, '/\\'),
-				'/\\',
-				DIRECTORY_SEPARATOR.DIRECTORY_SEPARATOR
-			);
-		}
-	}
-	elseif (is_dir(BASEPATH.$application_folder.DIRECTORY_SEPARATOR))
-	{
-		$application_folder = BASEPATH.strtr(
-			trim($application_folder, '/\\'),
-			'/\\',
-			DIRECTORY_SEPARATOR.DIRECTORY_SEPARATOR
-		);
-	}
-	else
-	{
-		header('HTTP/1.1 503 Service Unavailable.', TRUE, 503);
-		echo 'Your application folder path does not appear to be set correctly. Please open the following file and correct this: '.SELF;
-		exit(3); // EXIT_CONFIG
-	}
-
-	define('APPPATH', $application_folder.DIRECTORY_SEPARATOR);
-
-	// The path to the "views" directory
-	if ( ! isset($view_folder[0]) && is_dir(APPPATH.'views'.DIRECTORY_SEPARATOR))
-	{
-		$view_folder = APPPATH.'views';
-	}
-	elseif (is_dir($view_folder))
-	{
-		if (($_temp = realpath($view_folder)) !== FALSE)
-		{
-			$view_folder = $_temp;
-		}
-		else
-		{
-			$view_folder = strtr(
-				rtrim($view_folder, '/\\'),
-				'/\\',
-				DIRECTORY_SEPARATOR.DIRECTORY_SEPARATOR
-			);
-		}
-	}
-	elseif (is_dir(APPPATH.$view_folder.DIRECTORY_SEPARATOR))
-	{
-		$view_folder = APPPATH.strtr(
-			trim($view_folder, '/\\'),
-			'/\\',
-			DIRECTORY_SEPARATOR.DIRECTORY_SEPARATOR
-		);
-	}
-	else
-	{
-		header('HTTP/1.1 503 Service Unavailable.', TRUE, 503);
-		echo 'Your view folder path does not appear to be set correctly. Please open the following file and correct this: '.SELF;
-		exit(3); // EXIT_CONFIG
-	}
-
-	define('VIEWPATH', $view_folder.DIRECTORY_SEPARATOR);
-
-/*
- * --------------------------------------------------------------------
- * LOAD THE BOOTSTRAP FILE
- * --------------------------------------------------------------------
- *
- * And away we go...
- */
-require_once BASEPATH.'core/CodeIgniter.php';
+</div>
